@@ -1,0 +1,6 @@
+{
+  "name": "Aura Beauty Studio - Tu Marca Local",
+  "description": "Página web premium, catálogo, cotizador interactivo y reserva de citas para salones de belleza y spas. Demostración comercial creada por Tu Marca Local.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
