@@ -1,28 +1,28 @@
 import React from 'react';
-import { PACKAGES, Package, Service } from '../data/beautyData';
-import { Sparkles, Clock, Check, Plus, Calendar } from 'lucide-react';
+import { PACKAGES, Package } from '../data/beautyData';
+import { Check, Plus, Calendar } from 'lucide-react';
 
 interface PackagesSectionProps {
-  onAddPackageToQuote: (pkg: Package) => void;
+  onAddPackageToAppointment: (pkg: Package) => void;
   onBookPackage: (pkg: Package) => void;
 }
 
-export const PackagesSection: React.FC<PackagesSectionProps> = ({ onAddPackageToQuote, onBookPackage }) => {
+export const PackagesSection: React.FC<PackagesSectionProps> = ({ onAddPackageToAppointment, onBookPackage }) => {
   return (
     <section id="paquetes" className="py-20 lg:py-28 bg-[#F8F4EF]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
-          <div className="inline-flex items-center gap-2 bg-[#E9D9C8]/60 text-[#44372F] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase">
-            <Sparkles size={14} className="text-[#B99561]" />
+          <div className="inline-flex items-center gap-2.5 bg-[#E9D9C8]/60 text-[#44372F] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase">
+            <span className="w-3 h-px bg-[#B99561]" />
             Experiencias Combinadas
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#44372F]">
             REGÁLATE UNA EXPERIENCIA COMPLETA.
           </h2>
           <p className="text-[#746C65] text-base">
-            Paquetes diseñados para ofrecerte una jornada integral de belleza y bienestar con tarifas especiales.
+            Paquetes diseñados para ofrecerte una jornada integral de belleza y bienestar en un solo lugar.
           </p>
         </div>
 
@@ -38,11 +38,8 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({ onAddPackageTo
                   <img
                     src={pkg.image}
                     alt={pkg.name}
-                    className="w-full h-full object-cover transform hover:scale-105 transition duration-500"
+                    className="w-full h-full object-cover object-[50%_25%] transform hover:scale-105 transition duration-500"
                   />
-                  <div className="absolute top-4 right-4 bg-[#44372F] text-white px-3.5 py-1.5 rounded-full text-sm font-bold shadow-md">
-                    ${pkg.price} USD
-                  </div>
                 </div>
 
                 <div className="p-6 sm:p-8 space-y-4">
@@ -63,20 +60,15 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({ onAddPackageTo
                       ))}
                     </ul>
                   </div>
-
-                  <div className="flex items-center gap-1.5 text-xs text-[#746C65] pt-2">
-                    <Clock size={14} className="text-[#B99561]" />
-                    <span>Duración estimada: <strong className="text-[#44372F]">{pkg.duration}</strong></span>
-                  </div>
                 </div>
               </div>
 
               <div className="p-6 sm:p-8 pt-0 grid grid-cols-2 gap-3">
                 <button
-                  onClick={() => onAddPackageToQuote(pkg)}
+                  onClick={() => onAddPackageToAppointment(pkg)}
                   className="bg-[#F8F4EF] hover:bg-[#E9D9C8] text-[#44372F] border border-[#E9D9C8] py-3 px-3 rounded-xl text-xs font-semibold tracking-wide transition flex items-center justify-center gap-1 cursor-pointer"
                 >
-                  <Plus size={14} /> COTIZAR
+                  <Plus size={14} /> SELECCIONAR
                 </button>
 
                 <button

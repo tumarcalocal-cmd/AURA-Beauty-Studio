@@ -1,19 +1,19 @@
 import React from 'react';
-import { CheckCircle2, Heart, Sparkles, Shield, Clock } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 
 export const About: React.FC = () => {
   const benefits = [
     { title: 'Atención personalizada', desc: 'Cada servicio se adapta a tus gustos y necesidades específicas.' },
     { title: 'Ambiente acogedor', desc: 'Espacios diseñados para tu relax y comodidad absoluta.' },
     { title: 'Servicios especializados', desc: 'Tratamientos de alta calidad con productos profesionales.' },
-    { title: 'Reserva sencilla', desc: 'Coordina tus citas y calcula presupuestos en segundos.' }
+    { title: 'Reserva sencilla', desc: 'Coordina tus citas en línea de forma rápida y directa.' }
   ];
 
   return (
     <section id="nosotros" className="py-20 lg:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
+
           {/* Left Column: Professional Photo */}
           <div className="lg:col-span-6 relative">
             <div className="relative">
@@ -32,8 +32,8 @@ export const About: React.FC = () => {
 
           {/* Right Column: Text & 4 Benefits */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 bg-[#F8F4EF] text-[#B99561] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#E9D9C8]">
-              <Sparkles size={14} />
+            <div className="inline-flex items-center gap-2.5 bg-[#F8F4EF] text-[#B99561] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#E9D9C8]">
+              <span className="w-3 h-px bg-[#B99561]" />
               Sobre Nosotros
             </div>
 

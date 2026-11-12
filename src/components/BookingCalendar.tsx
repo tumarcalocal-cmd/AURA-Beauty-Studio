@@ -1,30 +1,27 @@
 import React, { useState } from 'react';
-import { Service, TEAM } from '../data/beautyData';
-import { Calendar as CalendarIcon, Clock, User, Phone, Mail, MessageSquare, CheckCircle, ShieldCheck, ArrowLeft, Send } from 'lucide-react';
-
-interface QuoteItem extends Service {
-  quantity: number;
-}
+import { Service, CATEGORIES, SERVICES, TEAM } from '../data/beautyData';
+import { Calendar as CalendarIcon, User, Phone, Mail, MessageSquare, CheckCircle, ShieldCheck, Send, Check, X } from 'lucide-react';
 
 interface BookingCalendarProps {
-  selectedServices: QuoteItem[];
-  onBackToQuote: () => void;
+  selectedServices: Service[];
+  onToggleService: (service: Service) => void;
+  onClearServices: () => void;
   onBookingConfirmed: () => void;
 }
 
 export const BookingCalendar: React.FC<BookingCalendarProps> = ({
   selectedServices,
-  onBackToQuote,
+  onToggleService,
+  onClearServices,
   onBookingConfirmed
 }) => {
-  // Form state
-  const [selectedProfessional, setSelectedProfessional] = useState(TEAM[0].id);
-  
-  // Default tomorrow's date
+  const [activeCategory, setActiveCategory] = useState(CATEGORIES[0].id);
+  const [selectedProfessional, setSelectedProfessional] = useState('any');
+
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const defaultDateStr = tomorrow.toISOString().split('T')[0];
-  
+
   const [date, setDate] = useState(defaultDateStr);
   const [timeSlot, setTimeSlot] = useState('10:00 AM');
   const [name, setName] = useState('');
@@ -38,18 +35,15 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
     '09:00 AM', '10:00 AM', '11:15 AM', '01:00 PM', '02:30 PM', '04:00 PM', '05:15 PM'
   ];
 
-  const totalServicesPrice = selectedServices.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const totalMinutes = selectedServices.reduce((sum, item) => sum + (item.durationMinutes * item.quantity), 0);
-  const hours = Math.floor(totalMinutes / 60);
-  const mins = totalMinutes % 60;
-  const totalDurationStr = hours > 0 ? `${hours}h ${mins > 0 ? `${mins}min` : ''}` : `${mins} min`;
+  const categoryServices = SERVICES.filter(s => s.categoryId === activeCategory);
 
-  const proObj = TEAM.find(p => p.id === selectedProfessional);
+  const proLabel = selectedProfessional === 'any'
+    ? 'Cualquier profesional disponible'
+    : TEAM.find(p => p.id === selectedProfessional)?.name || 'Por asignar';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone || !privacyConsent) {
-      alert('Por favor complete su nombre, teléfono y acepte el consentimiento de privacidad.');
       return;
     }
     setIsSubmitted(true);
@@ -57,8 +51,10 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
   };
 
   const handleWhatsAppShare = () => {
-    const servicesListText = selectedServices.map(s => `- ${s.name} (x${s.quantity}): $${s.price * s.quantity}`).join('\n');
-    const msg = `Hola, quiero solicitar una cita en Aura Beauty Studio:\n\n*Fecha:* ${date}\n*Horario:* ${timeSlot}\n*Profesional:* ${proObj?.name}\n\n*Servicios:* \n${servicesListText}\n\n*Total Estimado:* $${totalServicesPrice} USD\n*Cliente:* ${name} (${phone})`;
+    const servicesListText = selectedServices.length > 0
+      ? selectedServices.map(s => `- ${s.name}`).join('\n')
+      : '- Asesoría en el estudio';
+    const msg = `Hola, quiero solicitar una cita en Aura Beauty Studio:\n\n*Fecha:* ${date}\n*Horario:* ${timeSlot}\n*Profesional:* ${proLabel}\n\n*Tratamientos de interés:*\n${servicesListText}\n\n*Nombre:* ${name}\n*Teléfono:* ${phone}${comments ? `\n*Comentarios:* ${comments}` : ''}`;
     const encoded = encodeURIComponent(msg);
     window.open(`https://wa.me/50765278910?text=${encoded}`, '_blank');
   };
@@ -66,18 +62,18 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
   return (
     <section id="reservas" className="py-20 lg:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
           <div className="inline-flex items-center gap-2 bg-[#F8F4EF] text-[#B99561] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#E9D9C8]">
             <CalendarIcon size={14} />
-            Sistema de Citas
+            Agenda tu Cita
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#44372F]">
             ELIGE EL MOMENTO PERFECTO PARA TI.
           </h2>
           <p className="text-[#746C65] text-base">
-            Tus tratamientos seleccionados se han transferido automáticamente. Completa tus datos para agendar tu demostración.
+            Selecciona los tratamientos que deseas, escoge tu fecha y horario preferido y solicita tu cita en pocos pasos.
           </p>
         </div>
 
@@ -90,7 +86,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
             <div className="space-y-2">
               <h3 className="text-2xl font-bold text-[#44372F]">¡Solicitud de Cita Recibida!</h3>
               <p className="text-sm text-[#746C65]">
-                Gracias, <span className="font-semibold text-[#44372F]">{name}</span>. Hemos registrado los detalles de tu cita de demostración.
+                Gracias, <span className="font-semibold text-[#44372F]">{name}</span>. Hemos registrado los detalles de tu solicitud de cita.
               </p>
             </div>
 
@@ -101,16 +97,20 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
               </div>
               <div className="flex justify-between text-xs text-[#746C65]">
                 <span>Profesional:</span>
-                <span className="font-semibold text-[#44372F]">{proObj?.name}</span>
+                <span className="font-semibold text-[#44372F]">{proLabel}</span>
               </div>
-              <div className="flex justify-between text-xs text-[#746C65]">
-                <span>Duración estimada:</span>
-                <span className="font-semibold text-[#44372F]">{totalDurationStr}</span>
-              </div>
-              <div className="flex justify-between text-xs text-[#746C65] pt-2 border-t border-[#E9D9C8]">
-                <span>Presupuesto Estimado:</span>
-                <span className="font-bold text-[#B99561]">${totalServicesPrice} USD</span>
-              </div>
+              {selectedServices.length > 0 && (
+                <div className="pt-2 border-t border-[#E9D9C8] space-y-1">
+                  <span className="text-xs text-[#746C65] block">Tratamientos solicitados:</span>
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {selectedServices.map(s => (
+                      <span key={s.id} className="bg-[#F8F4EF] text-[#44372F] px-2.5 py-1 rounded-lg text-xs font-medium border border-[#E9D9C8]">
+                        {s.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <p className="text-xs text-[#746C65] italic">
@@ -123,85 +123,158 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
                 className="bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-3 rounded-full text-xs font-semibold tracking-wide transition shadow-sm flex items-center justify-center gap-2 cursor-pointer"
               >
                 <MessageSquare size={16} />
-                Enviar detalles por WhatsApp
+                Enviar solicitud por WhatsApp
               </button>
 
               <button
                 onClick={() => setIsSubmitted(false)}
                 className="bg-white hover:bg-[#E9D9C8]/40 text-[#44372F] border border-[#E9D9C8] px-6 py-3 rounded-full text-xs font-semibold tracking-wide transition cursor-pointer"
               >
-                Hacer otra reserva
+                Hacer otra solicitud
               </button>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* Left: Booking Form */}
-            <form onSubmit={handleSubmit} className="lg:col-span-7 bg-[#F8F4EF] p-6 sm:p-8 rounded-3xl border border-[#E9D9C8] space-y-6">
-              <div className="flex items-center justify-between border-b border-[#E9D9C8] pb-4">
-                <h3 className="text-xl font-bold text-[#44372F]">Datos de la Reserva</h3>
-                <button
-                  type="button"
-                  onClick={onBackToQuote}
-                  className="text-xs text-[#B99561] hover:underline flex items-center gap-1 font-semibold cursor-pointer"
-                >
-                  <ArrowLeft size={14} /> Volver al cotizador
-                </button>
-              </div>
 
-              {/* Professional Selection */}
-              <div className="space-y-2">
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#44372F]">
-                  Profesional preferida
-                </label>
-                <select
-                  value={selectedProfessional}
-                  onChange={(e) => setSelectedProfessional(e.target.value)}
-                  className="w-full bg-white border border-[#E9D9C8] rounded-xl px-4 py-3 text-sm text-[#44372F] focus:outline-none focus:ring-2 focus:ring-[#B99561]"
-                >
-                  {TEAM.map(member => (
-                    <option key={member.id} value={member.id}>
-                      {member.name} — {member.role}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            {/* Left: Simple Appointment Form */}
+            <form onSubmit={handleSubmit} className="lg:col-span-7 bg-[#F8F4EF] p-6 sm:p-8 rounded-3xl border border-[#E9D9C8] space-y-8">
 
-              {/* Date & Time Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#44372F]">
-                    Fecha de la cita
-                  </label>
-                  <input
-                    type="date"
-                    value={date}
-                    min={new Date().toISOString().split('T')[0]}
-                    onChange={(e) => setDate(e.target.value)}
-                    className="w-full bg-white border border-[#E9D9C8] rounded-xl px-4 py-3 text-sm text-[#44372F] focus:outline-none focus:ring-2 focus:ring-[#B99561]"
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#44372F]">
-                    Horario disponible (Demostración)
-                  </label>
-                  <select
-                    value={timeSlot}
-                    onChange={(e) => setTimeSlot(e.target.value)}
-                    className="w-full bg-white border border-[#E9D9C8] rounded-xl px-4 py-3 text-sm text-[#44372F] focus:outline-none focus:ring-2 focus:ring-[#B99561]"
-                  >
-                    {availableTimeSlots.map((slot, idx) => (
-                      <option key={idx} value={slot}>{slot}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Personal Details */}
+              {/* Step 1: Simple Service Selection */}
               <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-[#B99561]">1. Tratamientos</span>
+                    <h3 className="text-lg font-bold text-[#44372F]">¿Qué servicio te gustaría agendar?</h3>
+                  </div>
+                  {selectedServices.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={onClearServices}
+                      className="text-xs text-[#746C65] hover:text-[#44372F] underline cursor-pointer"
+                    >
+                      Limpiar selección
+                    </button>
+                  )}
+                </div>
+
+                {/* Category Filter Tabs */}
+                <div className="flex flex-wrap gap-2">
+                  {CATEGORIES.map(cat => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setActiveCategory(cat.id)}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer ${
+                        activeCategory === cat.id
+                          ? 'bg-[#44372F] text-white'
+                          : 'bg-white text-[#44372F] hover:bg-[#E9D9C8]/50 border border-[#E9D9C8]'
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Selectable Service Chips */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {categoryServices.map(service => {
+                    const isSelected = selectedServices.some(s => s.id === service.id);
+                    return (
+                      <button
+                        key={service.id}
+                        type="button"
+                        onClick={() => onToggleService(service)}
+                        className={`p-3.5 rounded-xl border text-left transition flex items-center justify-between gap-2 cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#44372F] text-white border-[#44372F] shadow-xs'
+                            : 'bg-white text-[#44372F] border-[#E9D9C8] hover:border-[#B99561]'
+                        }`}
+                      >
+                        <p className="text-xs font-bold leading-snug">{service.name}</p>
+                        <span className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
+                          isSelected ? 'bg-[#B99561] text-white' : 'bg-[#F8F4EF] text-[#44372F]'
+                        }`}>
+                          {isSelected ? <Check size={14} /> : <span className="text-xs font-bold">+</span>}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Step 2: Date, Time & Specialist */}
+              <div className="space-y-4 pt-6 border-t border-[#E9D9C8]">
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[#B99561]">2. Fecha y Horario</span>
+                  <h3 className="text-lg font-bold text-[#44372F]">Escoge cuándo visitarnos</h3>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#44372F]">
+                      Fecha de la cita
+                    </label>
+                    <input
+                      type="date"
+                      value={date}
+                      min={new Date().toISOString().split('T')[0]}
+                      onChange={(e) => setDate(e.target.value)}
+                      className="w-full bg-white border border-[#E9D9C8] rounded-xl px-4 py-3 text-sm text-[#44372F] focus:outline-none focus:ring-2 focus:ring-[#B99561]"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#44372F]">
+                      Profesional preferida
+                    </label>
+                    <select
+                      value={selectedProfessional}
+                      onChange={(e) => setSelectedProfessional(e.target.value)}
+                      className="w-full bg-white border border-[#E9D9C8] rounded-xl px-4 py-3 text-sm text-[#44372F] focus:outline-none focus:ring-2 focus:ring-[#B99561]"
+                    >
+                      <option value="any">Cualquier profesional disponible</option>
+                      {TEAM.map(member => (
+                        <option key={member.id} value={member.id}>
+                          {member.name} — {member.role}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Clickable Time Slots */}
+                <div className="space-y-2">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-[#44372F]">
+                    Horario preferido (Demostración)
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {availableTimeSlots.map((slot) => (
+                      <button
+                        key={slot}
+                        type="button"
+                        onClick={() => setTimeSlot(slot)}
+                        className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                          timeSlot === slot
+                            ? 'bg-[#B99561] text-white shadow-xs'
+                            : 'bg-white text-[#44372F] border border-[#E9D9C8] hover:border-[#B99561]'
+                        }`}
+                      >
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Step 3: Contact Info */}
+              <div className="space-y-4 pt-6 border-t border-[#E9D9C8]">
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-[#B99561]">3. Tus Datos</span>
+                  <h3 className="text-lg font-bold text-[#44372F]">¿A nombre de quién reservamos?</h3>
+                </div>
+
                 <div className="space-y-2">
                   <label className="block text-xs font-semibold uppercase tracking-wider text-[#44372F]">
                     Nombre completo *
@@ -256,19 +329,19 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
 
                 <div className="space-y-2">
                   <label className="block text-xs font-semibold uppercase tracking-wider text-[#44372F]">
-                    Comentarios o peticiones especiales (Opcional)
+                    Comentarios (Opcional)
                   </label>
                   <textarea
-                    rows={3}
-                    placeholder="Alguna indicación para tu visita..."
+                    rows={2}
+                    placeholder="Alguna indicación o preferencia para tu visita..."
                     value={comments}
                     onChange={(e) => setComments(e.target.value)}
-                    className="w-full p-4 bg-white border border-[#E9D9C8] rounded-xl text-sm text-[#44372F] focus:outline-none focus:ring-2 focus:ring-[#B99561]"
+                    className="w-full p-3.5 bg-white border border-[#E9D9C8] rounded-xl text-sm text-[#44372F] focus:outline-none focus:ring-2 focus:ring-[#B99561]"
                   />
                 </div>
 
                 {/* Privacy Consent */}
-                <div className="flex items-start gap-3 pt-2">
+                <div className="flex items-start gap-3 pt-1">
                   <input
                     type="checkbox"
                     id="privacy"
@@ -278,7 +351,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
                     required
                   />
                   <label htmlFor="privacy" className="text-xs text-[#746C65] leading-relaxed">
-                    Acepto la <span className="underline font-medium text-[#44372F]">política de privacidad</span> y entiendo que esta es una solicitud de cita de demostración comercial.
+                    Acepto la <span className="underline font-medium text-[#44372F]">política de privacidad</span> y entiendo que esta es una solicitud de cita de demostración.
                   </label>
                 </div>
               </div>
@@ -287,58 +360,63 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
                 type="submit"
                 className="w-full bg-[#44372F] hover:bg-[#2e241e] text-white py-4 rounded-full font-semibold tracking-wider text-sm transition shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
-                CONFIRMAR SOLICITUD DE CITA
+                SOLICITAR MI CITA
                 <Send size={16} />
               </button>
             </form>
 
-            {/* Right: Summary Review */}
-            <div className="lg:col-span-5 bg-white p-6 sm:p-8 rounded-3xl border border-[#E9D9C8] shadow-sm space-y-6">
+            {/* Right: Simple Summary Card (No Prices, No Duration) */}
+            <div className="lg:col-span-5 bg-[#F8F4EF] p-6 sm:p-8 rounded-3xl border border-[#E9D9C8] shadow-sm sticky top-28 space-y-6">
               <h3 className="text-xl font-bold text-[#44372F] border-b border-[#E9D9C8] pb-4">
-                Resumen de tu Visita
+                Resumen de tu Cita
               </h3>
 
-              <div className="space-y-4 max-h-[300px] overflow-y-auto pr-1">
+              <div className="space-y-3 max-h-[280px] overflow-y-auto pr-1">
                 {selectedServices.length === 0 ? (
-                  <p className="text-sm text-[#746C65]">No hay servicios seleccionados.</p>
+                  <p className="text-sm text-[#746C65] py-4">
+                    Puedes elegir uno o varios tratamientos a la izquierda, o agendar directamente para asesoría en el estudio.
+                  </p>
                 ) : (
                   selectedServices.map(item => (
-                    <div key={item.id} className="flex justify-between items-center bg-[#F8F4EF] p-3 rounded-xl border border-[#E9D9C8]/60">
-                      <div>
-                        <h4 className="text-xs font-bold text-[#44372F]">{item.name}</h4>
-                        <p className="text-[11px] text-[#746C65]">Cantidad: {item.quantity} • ⏱ {item.duration}</p>
-                      </div>
-                      <span className="text-xs font-bold text-[#B99561]">${item.price * item.quantity} USD</span>
+                    <div key={item.id} className="flex justify-between items-center bg-white p-3.5 rounded-xl border border-[#E9D9C8]/70">
+                      <h4 className="text-xs font-bold text-[#44372F]">{item.name}</h4>
+                      <button
+                        type="button"
+                        onClick={() => onToggleService(item)}
+                        className="text-[#746C65] hover:text-rose-600 p-1 transition cursor-pointer"
+                        title="Quitar tratamiento"
+                      >
+                        <X size={16} />
+                      </button>
                     </div>
                   ))
                 )}
               </div>
 
-              <div className="border-t border-[#E9D9C8] pt-4 space-y-2 text-sm text-[#746C65]">
+              <div className="border-t border-[#E9D9C8] pt-4 space-y-2.5 text-sm text-[#746C65]">
                 <div className="flex justify-between">
-                  <span>Profesional elegida:</span>
-                  <span className="font-semibold text-[#44372F]">{proObj?.name}</span>
+                  <span>Fecha elegida:</span>
+                  <span className="font-semibold text-[#44372F]">{date}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Duración total aproximada:</span>
-                  <span className="font-semibold text-[#44372F]">{totalDurationStr}</span>
+                  <span>Horario:</span>
+                  <span className="font-semibold text-[#44372F]">{timeSlot}</span>
                 </div>
-                <div className="flex justify-between items-center text-lg font-bold text-[#44372F] pt-2 border-t border-[#E9D9C8]">
-                  <span>Total Estimado:</span>
-                  <span className="text-[#B99561] text-xl">${totalServicesPrice} USD</span>
+                <div className="flex justify-between">
+                  <span>Profesional:</span>
+                  <span className="font-semibold text-[#44372F] text-right">{proLabel}</span>
                 </div>
               </div>
 
-              <div className="bg-[#F8F4EF] p-4 rounded-2xl border border-[#E9D9C8] space-y-2">
+              <div className="bg-white p-4 rounded-2xl border border-[#E9D9C8] space-y-2">
                 <div className="flex items-center gap-2 text-xs font-semibold text-[#44372F]">
                   <ShieldCheck size={16} className="text-[#B99561]" />
-                  Aviso de Demostración
+                  Confirmación Directa
                 </div>
                 <p className="text-[11px] text-[#746C65] leading-relaxed">
-                  Solicitud de cita de demostración. La reserva requiere confirmación del establecimiento. No se realizan cargos en línea.
+                  Solicitud de cita de demostración. La confirmación final y detalles de atención se coordinan directamente con el salón.
                 </p>
               </div>
-
             </div>
 
           </div>

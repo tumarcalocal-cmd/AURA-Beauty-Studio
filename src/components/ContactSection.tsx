@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Send, Phone, Mail, MapPin, CheckCircle } from 'lucide-react';
+import { Send, Phone, Mail, MapPin, CheckCircle } from 'lucide-react';
 
 interface ContactSectionProps {
   onOpenBooking: () => void;
@@ -20,8 +20,8 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onOpenBooking })
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
-          <div className="inline-flex items-center gap-2 bg-[#F8F4EF] text-[#B99561] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#E9D9C8]">
-            <Sparkles size={14} />
+          <div className="inline-flex items-center gap-2.5 bg-[#F8F4EF] text-[#B99561] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#E9D9C8]">
+            <span className="w-3 h-px bg-[#B99561]" />
             Contacto Directo
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#44372F]">

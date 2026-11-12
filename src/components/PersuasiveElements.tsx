@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Sparkles, Calendar, ArrowRight } from 'lucide-react';
+import { X, Heart, Calendar, ArrowRight } from 'lucide-react';
 
 interface ExitIntentPopupProps {
   onExplore: () => void;
@@ -9,7 +9,6 @@ export const ExitIntentPopup: React.FC<ExitIntentPopupProps> = ({ onExplore }) =
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // Timer fallback after 15 seconds
     const timer = setTimeout(() => {
       const hasShown = sessionStorage.getItem('aura_popup_shown');
       if (!hasShown) {
@@ -18,7 +17,6 @@ export const ExitIntentPopup: React.FC<ExitIntentPopupProps> = ({ onExplore }) =
       }
     }, 15000);
 
-    // Mouse leave / exit intent listener
     const handleMouseLeave = (e: MouseEvent) => {
       if (e.clientY <= 10) {
         const hasShown = sessionStorage.getItem('aura_popup_shown');
@@ -44,20 +42,21 @@ export const ExitIntentPopup: React.FC<ExitIntentPopupProps> = ({ onExplore }) =
         <button
           onClick={() => setIsOpen(false)}
           className="absolute top-4 right-4 text-[#746C65] hover:text-[#44372F] p-2 cursor-pointer"
+          aria-label="Cerrar"
         >
           <X size={20} />
         </button>
 
         <div className="w-16 h-16 bg-[#E9D9C8]/50 text-[#B99561] rounded-full flex items-center justify-center mx-auto">
-          <Sparkles size={28} />
+          <Heart size={28} />
         </div>
 
         <div className="space-y-2">
           <h3 className="text-2xl font-bold text-[#44372F]">
-            ¡ESPERA! TU MOMENTO DE BELLEZA TE ESPERA.
+            ¡ESPERA! TU MOMENTO DE BELLEZA TE ESTÁ ESPERANDO.
           </h3>
           <p className="text-sm text-[#746C65] leading-relaxed">
-            Descubre nuestros tratamientos y calcula el presupuesto de tu próxima experiencia.
+            Descubre nuestros tratamientos y agenda tu próxima experiencia de bienestar en segundos.
           </p>
         </div>
 

@@ -48,7 +48,7 @@ export const LegalModals: React.FC<LegalModalProps> = ({ type, onClose }) => {
                 Los presentes <strong>Términos y Condiciones</strong> regulan el uso de la página web de demostración comercial de Aura Beauty Studio.
               </p>
               <h4 className="font-bold text-[#44372F] pt-2">1. Servicios Ilustrativos</h4>
-              <p>Todos los tratamientos, descripciones, duraciones y tarifas mostradas en este sitio web son meramente ilustrativos y de ejemplo.</p>
+              <p>Todos los tratamientos y descripciones mostradas en este sitio web son meramente ilustrativos y de ejemplo.</p>
               <h4 className="font-bold text-[#44372F] pt-2">2. Solicitudes de Citas</h4>
               <p>Las reservas realizadas a través de este sitio corresponden a simulaciones comerciales y no constituyen confirmaciones reales de citas ante un establecimiento físico.</p>
             </>
@@ -60,7 +60,7 @@ export const LegalModals: React.FC<LegalModalProps> = ({ type, onClose }) => {
                 "Aura Beauty Studio es una empresa ficticia utilizada como demostración comercial de páginas web desarrolladas por Tu Marca Local.
               </p>
               <p>
-                Los servicios, fotografías, profesionales, tarifas, horarios y reservas son ejemplos ilustrativos.
+                Los servicios, fotografías, profesionales, horarios y reservas son ejemplos ilustrativos.
               </p>
               <p>
                 Este sitio no confirma citas reales, no procesa pagos ni representa un establecimiento de belleza en funcionamiento."

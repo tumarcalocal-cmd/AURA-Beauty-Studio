@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Heart, ShieldCheck, Layers, CalendarCheck } from 'lucide-react';
+import { Heart, ShieldCheck, Layers, CalendarCheck } from 'lucide-react';
 
 export const WhyUsSection: React.FC = () => {
   const cards = [
@@ -21,7 +21,7 @@ export const WhyUsSection: React.FC = () => {
     {
       icon: <CalendarCheck size={24} className="text-[#B99561]" />,
       title: 'Facilidad para reservar',
-      desc: 'Cotiza presupuestos y agenda tus citas en línea de forma rápida y transparente.'
+      desc: 'Agenda tus citas en línea de forma rápida, sencilla y sin complicaciones.'
     }
   ];
 
@@ -31,8 +31,8 @@ export const WhyUsSection: React.FC = () => {
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
-          <div className="inline-flex items-center gap-2 bg-[#F8F4EF] text-[#B99561] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#E9D9C8]">
-            <Sparkles size={14} />
+          <div className="inline-flex items-center gap-2.5 bg-[#F8F4EF] text-[#B99561] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#E9D9C8]">
+            <span className="w-3 h-px bg-[#B99561]" />
             Nuestra Diferencia
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#44372F]">

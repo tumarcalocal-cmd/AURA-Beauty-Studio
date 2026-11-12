@@ -3,8 +3,6 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { About } from './components/About';
 import { ServicesCatalog } from './components/ServicesCatalog';
-import { PriceList } from './components/PriceList';
-import { QuoteBuilder } from './components/QuoteBuilder';
 import { BookingCalendar } from './components/BookingCalendar';
 import { PackagesSection } from './components/PackagesSection';
 import { TeamSection } from './components/TeamSection';
@@ -19,14 +17,9 @@ import { ExitIntentPopup, MobileFloatingButton } from './components/PersuasiveEl
 import { TuMarcaLocalFooter } from './components/TuMarcaLocalFooter';
 import { Service, Package, SERVICES } from './data/beautyData';
 
-interface QuoteItem extends Service {
-  quantity: number;
-}
-
 export default function App() {
-  const [selectedServices, setSelectedServices] = useState<QuoteItem[]>([
-    // Pre-populate one item as a helpful demo default
-    { ...SERVICES[0], quantity: 1 }
+  const [selectedServices, setSelectedServices] = useState<Service[]>([
+    SERVICES[0]
   ]);
   const [legalModalType, setLegalModalType] = useState<'privacy' | 'terms' | 'disclaimer' | null>(null);
 
@@ -37,70 +30,52 @@ export default function App() {
     }
   };
 
-  const handleAddServiceToQuote = (service: Service) => {
+  const handleToggleService = (service: Service) => {
     setSelectedServices(prev => {
-      const existing = prev.find(item => item.id === service.id);
-      if (existing) {
-        return prev.map(item =>
-          item.id === service.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
+      const exists = prev.some(item => item.id === service.id);
+      if (exists) {
+        return prev.filter(item => item.id !== service.id);
       }
-      return [...prev, { ...service, quantity: 1 }];
+      return [...prev, service];
     });
   };
 
-  const handleUpdateQuantity = (serviceId: string, quantity: number) => {
-    if (quantity <= 0) {
-      handleRemoveService(serviceId);
-      return;
-    }
-    setSelectedServices(prev =>
-      prev.map(item => (item.id === serviceId ? { ...item, quantity } : item))
-    );
-  };
-
-  const handleRemoveService = (serviceId: string) => {
-    setSelectedServices(prev => prev.filter(item => item.id !== serviceId));
-  };
-
-  const handleClearQuote = () => {
+  const handleClearServices = () => {
     setSelectedServices([]);
   };
 
-  const handleAddPackageToQuote = (pkg: Package) => {
-    // Find services matching package names
-    pkg.services.forEach(pkgSvcName => {
-      const found = SERVICES.find(s => s.name.toLowerCase() === pkgSvcName.toLowerCase());
-      if (found) {
-        handleAddServiceToQuote(found);
-      }
+  const handleAddPackageToAppointment = (pkg: Package) => {
+    setSelectedServices(prev => {
+      const next = [...prev];
+      pkg.services.forEach(pkgSvcName => {
+        const found = SERVICES.find(s => s.name.toLowerCase() === pkgSvcName.toLowerCase());
+        if (found && !next.some(item => item.id === found.id)) {
+          next.push(found);
+        }
+      });
+      return next;
     });
-    handleNavigate('cotizador');
+    handleNavigate('reservas');
   };
 
   const handleBookService = (service: Service) => {
-    // Ensure service is in quote and go to booking
-    const existing = selectedServices.find(s => s.id === service.id);
-    if (!existing) {
-      setSelectedServices(prev => [...prev, { ...service, quantity: 1 }]);
-    }
+    setSelectedServices(prev => {
+      if (prev.some(s => s.id === service.id)) return prev;
+      return [...prev, service];
+    });
     handleNavigate('reservas');
   };
 
   const handleBookPackage = (pkg: Package) => {
-    handleAddPackageToQuote(pkg);
-    handleNavigate('reservas');
+    handleAddPackageToAppointment(pkg);
   };
-
-  const totalQuoteCount = selectedServices.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="min-h-screen bg-[#F8F4EF] text-[#44372F] font-sans selection:bg-[#E9D9C8]">
-      
+
       {/* Navbar */}
       <Navbar
-        quoteCount={totalQuoteCount}
-        onOpenQuote={() => handleNavigate('cotizador')}
+        selectedCount={selectedServices.length}
         onOpenBooking={() => handleNavigate('reservas')}
         onNavigate={handleNavigate}
       />
@@ -116,38 +91,22 @@ export default function App() {
 
       {/* Services Catalog */}
       <ServicesCatalog
-        onAddServiceToQuote={handleAddServiceToQuote}
+        onToggleService={handleToggleService}
         onBookService={handleBookService}
-        quotedServiceIds={selectedServices.map(s => s.id)}
+        selectedServiceIds={selectedServices.map(s => s.id)}
       />
 
-      {/* Price List */}
-      <PriceList
-        onAddServiceToQuote={handleAddServiceToQuote}
-        quotedServiceIds={selectedServices.map(s => s.id)}
-      />
-
-      {/* Interactive Quote Builder */}
-      <QuoteBuilder
-        selectedServices={selectedServices}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveService={handleRemoveService}
-        onClearQuote={handleClearQuote}
-        onAddService={handleAddServiceToQuote}
-        onProceedToBooking={() => handleNavigate('reservas')}
-        onNavigateToServices={() => handleNavigate('servicios')}
-      />
-
-      {/* Booking Calendar */}
+      {/* Simple Booking Calendar */}
       <BookingCalendar
         selectedServices={selectedServices}
-        onBackToQuote={() => handleNavigate('cotizador')}
+        onToggleService={handleToggleService}
+        onClearServices={handleClearServices}
         onBookingConfirmed={() => {}}
       />
 
       {/* Beauty Packages */}
       <PackagesSection
-        onAddPackageToQuote={handleAddPackageToQuote}
+        onAddPackageToAppointment={handleAddPackageToAppointment}
         onBookPackage={handleBookPackage}
       />
 
@@ -163,7 +122,7 @@ export default function App() {
       {/* Hours & Location */}
       <HoursAndLocation />
 
-      {/* Testimonials */}
+      {/* Testimonials Carousel */}
       <TestimonialsSection />
 
       {/* FAQ */}

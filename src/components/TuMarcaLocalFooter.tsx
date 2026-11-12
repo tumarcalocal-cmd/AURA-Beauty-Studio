@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, Sparkles, Shield, FileText, AlertCircle } from 'lucide-react';
+import { Phone, Shield, FileText, AlertCircle } from 'lucide-react';
 
 interface FooterProps {
   onOpenLegal: (type: 'privacy' | 'terms' | 'disclaimer') => void;
@@ -9,11 +9,11 @@ interface FooterProps {
 export const TuMarcaLocalFooter: React.FC<FooterProps> = ({ onOpenLegal, onNavigate }) => {
   return (
     <footer className="bg-[#44372F] text-white">
-      
+
       {/* Commercial Section for Tu Marca Local */}
       <div className="py-20 px-4 sm:px-6 lg:px-8 border-b border-white/10 text-center max-w-4xl mx-auto space-y-6">
-        <div className="inline-flex items-center gap-2 bg-[#B99561]/30 text-[#E9D9C8] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#B99561]/50">
-          <Sparkles size={14} className="text-[#B99561]" />
+        <div className="inline-flex items-center gap-2.5 bg-[#B99561]/30 text-[#E9D9C8] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#B99561]/50">
+          <span className="w-3 h-px bg-[#B99561]" />
           Demostración Comercial Tu Marca Local
         </div>
 
@@ -22,7 +22,7 @@ export const TuMarcaLocalFooter: React.FC<FooterProps> = ({ onOpenLegal, onNavig
         </h2>
 
         <p className="text-sm sm:text-base text-[#E9D9C8] max-w-2xl mx-auto leading-relaxed">
-          Presenta tus tratamientos, muestra tus tarifas, permite que tus clientes calculen presupuestos y facilita la solicitud de citas desde una página web profesional.
+          Presenta tus tratamientos, muestra tu galería y facilita la solicitud de citas en línea desde una página web profesional adaptada al mercado panameño.
         </p>
 
         <p className="text-xs text-[#E9D9C8]/80 italic max-w-xl mx-auto">
@@ -45,7 +45,7 @@ export const TuMarcaLocalFooter: React.FC<FooterProps> = ({ onOpenLegal, onNavig
       {/* Main Footer Links & Copyright */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-          
+
           <div className="space-y-4">
             <span className="block text-2xl font-bold tracking-widest text-white">AURA</span>
             <span className="block text-[10px] tracking-[0.3em] uppercase text-[#E9D9C8]">Beauty Studio</span>
@@ -57,20 +57,19 @@ export const TuMarcaLocalFooter: React.FC<FooterProps> = ({ onOpenLegal, onNavig
           <div className="space-y-3">
             <h4 className="text-sm font-bold uppercase tracking-wider text-[#B99561]">Navegación</h4>
             <ul className="space-y-2 text-xs text-[#E9D9C8]/80">
-              <li><button onClick={() => onNavigate('nosotros')} className="hover:text-white transition">Nosotros</button></li>
-              <li><button onClick={() => onNavigate('servicios')} className="hover:text-white transition">Servicios</button></li>
-              <li><button onClick={() => onNavigate('tarifas')} className="hover:text-white transition">Tarifas</button></li>
-              <li><button onClick={() => onNavigate('cotizador')} className="hover:text-white transition">Cotizador</button></li>
+              <li><button onClick={() => onNavigate('nosotros')} className="hover:text-white transition cursor-pointer">Nosotros</button></li>
+              <li><button onClick={() => onNavigate('servicios')} className="hover:text-white transition cursor-pointer">Servicios</button></li>
+              <li><button onClick={() => onNavigate('reservas')} className="hover:text-white transition cursor-pointer">Agendar Cita</button></li>
+              <li><button onClick={() => onNavigate('contacto')} className="hover:text-white transition cursor-pointer">Contacto</button></li>
             </ul>
           </div>
 
           <div className="space-y-3">
             <h4 className="text-sm font-bold uppercase tracking-wider text-[#B99561]">Experiencias</h4>
             <ul className="space-y-2 text-xs text-[#E9D9C8]/80">
-              <li><button onClick={() => onNavigate('paquetes')} className="hover:text-white transition">Paquetes de Belleza</button></li>
-              <li><button onClick={() => onNavigate('equipo')} className="hover:text-white transition">Equipo de Profesionales</button></li>
-              <li><button onClick={() => onNavigate('galeria')} className="hover:text-white transition">Galería</button></li>
-              <li><button onClick={() => onNavigate('reservas')} className="hover:text-white transition">Reserva de Citas</button></li>
+              <li><button onClick={() => onNavigate('paquetes')} className="hover:text-white transition cursor-pointer">Paquetes de Belleza</button></li>
+              <li><button onClick={() => onNavigate('equipo')} className="hover:text-white transition cursor-pointer">Equipo de Profesionales</button></li>
+              <li><button onClick={() => onNavigate('galeria')} className="hover:text-white transition cursor-pointer">Galería</button></li>
             </ul>
           </div>
 
@@ -78,17 +77,17 @@ export const TuMarcaLocalFooter: React.FC<FooterProps> = ({ onOpenLegal, onNavig
             <h4 className="text-sm font-bold uppercase tracking-wider text-[#B99561]">Legal y Transparencia</h4>
             <ul className="space-y-2 text-xs text-[#E9D9C8]/80">
               <li>
-                <button onClick={() => onOpenLegal('privacy')} className="hover:text-white transition flex items-center gap-1.5">
+                <button onClick={() => onOpenLegal('privacy')} className="hover:text-white transition flex items-center gap-1.5 cursor-pointer">
                   <Shield size={14} /> Política de Privacidad
                 </button>
               </li>
               <li>
-                <button onClick={() => onOpenLegal('terms')} className="hover:text-white transition flex items-center gap-1.5">
+                <button onClick={() => onOpenLegal('terms')} className="hover:text-white transition flex items-center gap-1.5 cursor-pointer">
                   <FileText size={14} /> Términos y Condiciones
                 </button>
               </li>
               <li>
-                <button onClick={() => onOpenLegal('disclaimer')} className="hover:text-white transition flex items-center gap-1.5">
+                <button onClick={() => onOpenLegal('disclaimer')} className="hover:text-white transition flex items-center gap-1.5 cursor-pointer">
                   <AlertCircle size={14} /> Descargo de Responsabilidad
                 </button>
               </li>

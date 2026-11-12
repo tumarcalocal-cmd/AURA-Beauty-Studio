@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Compass, Sparkles, ShieldCheck, Heart } from 'lucide-react';
+import { Calendar, Compass, Scissors, ShieldCheck, Heart } from 'lucide-react';
 
 interface HeroProps {
   onOpenBooking: () => void;
@@ -11,11 +11,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onExploreServices }) 
     <section id="hero" className="relative bg-[#F8F4EF] py-16 lg:py-24 overflow-hidden border-b border-[#E9D9C8]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
+
           {/* Left Text Column */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 bg-[#E9D9C8]/60 text-[#44372F] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase">
-              <Sparkles size={14} className="text-[#B99561]" />
+            <div className="inline-flex items-center gap-2.5 bg-[#E9D9C8]/60 text-[#44372F] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase">
+              <span className="w-3 h-px bg-[#B99561]" />
               Tu belleza. Tu momento. Tu esencia.
             </div>
 
@@ -32,7 +32,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onExploreServices }) 
               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
                 <button
                   onClick={onOpenBooking}
-                  className="w-full sm:w-auto bg-[#44372F] hover:bg-[#2e241e] text-white px-8 py-4 rounded-full font-semibold tracking-wider text-sm transition shadow-md flex items-center justify-center gap-2 group"
+                  className="w-full sm:w-auto bg-[#44372F] hover:bg-[#2e241e] text-white px-8 py-4 rounded-full font-semibold tracking-wider text-sm transition shadow-md flex items-center justify-center gap-2 group cursor-pointer"
                 >
                   <Calendar size={18} className="transition-transform group-hover:scale-110" />
                   RESERVAR MI CITA
@@ -40,7 +40,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onExploreServices }) 
 
                 <button
                   onClick={onExploreServices}
-                  className="w-full sm:w-auto bg-white hover:bg-[#E9D9C8]/30 text-[#44372F] border border-[#B99561] px-8 py-4 rounded-full font-semibold tracking-wider text-sm transition shadow-xs flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-white hover:bg-[#E9D9C8]/30 text-[#44372F] border border-[#B99561] px-8 py-4 rounded-full font-semibold tracking-wider text-sm transition shadow-xs flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Compass size={18} className="text-[#B99561]" />
                   EXPLORAR SERVICIOS
@@ -65,7 +65,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking, onExploreServices }) 
 
               <div className="flex items-center justify-center lg:justify-start gap-3 bg-white/60 p-3 rounded-xl border border-[#E9D9C8]/40">
                 <div className="w-8 h-8 rounded-full bg-[#E9D9C8]/50 flex items-center justify-center text-[#B99561]">
-                  <Sparkles size={18} />
+                  <Scissors size={18} />
                 </div>
                 <span className="text-xs font-semibold text-[#44372F]">Servicios de belleza.</span>
               </div>

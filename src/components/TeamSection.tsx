@@ -1,16 +1,16 @@
 import React from 'react';
 import { TEAM } from '../data/beautyData';
-import { Sparkles, Award } from 'lucide-react';
+import { Award } from 'lucide-react';
 
 export const TeamSection: React.FC = () => {
   return (
     <section id="equipo" className="py-20 lg:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
-          <div className="inline-flex items-center gap-2 bg-[#F8F4EF] text-[#B99561] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#E9D9C8]">
-            <Sparkles size={14} />
+          <div className="inline-flex items-center gap-2.5 bg-[#F8F4EF] text-[#B99561] px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase border border-[#E9D9C8]">
+            <span className="w-3 h-px bg-[#B99561]" />
             Nuestro Equipo
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#44372F]">
@@ -32,7 +32,7 @@ export const TeamSection: React.FC = () => {
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-full object-cover transform hover:scale-105 transition duration-500"
+                  className="w-full h-full object-cover object-[50%_20%] transform hover:scale-105 transition duration-500"
                 />
                 <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-xs px-3 py-1 rounded-full text-xs font-semibold text-[#44372F] shadow-xs">
                   {member.specialty}
